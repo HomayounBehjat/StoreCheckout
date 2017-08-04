@@ -40,16 +40,41 @@ class StoreCheckoutTestSuit extends FunSuite {
     assert((storeCheckout scan apple).get == BigDecimal(0.60))
   }
 
-  test("The price of an apple and an orange is 85p") {
-    val apple1:Food = new Food(FoodNames.Apple, BigDecimal(0.60))
-    val apple2:Food = new Food(FoodNames.Apple, BigDecimal(0.60))
-    val orange:Food = new Food(FoodNames.Apple, BigDecimal(0.25))
-    val apple3:Food = new Food(FoodNames.Apple, BigDecimal(0.60))
+  test("The price of three apples and one orange is 1.45") {
+    val apple = new Food(FoodNames.Apple, BigDecimal(0.60))
+    val orange = new Food(FoodNames.Orange, BigDecimal(0.25))
 
     // An Apple And An Orange cost 85 pence
-    assert((storeCheckout scan List(apple1, apple2, orange, apple3)) == BigDecimal(2.05))
+    assert((storeCheckout scan List(apple, apple, orange, apple)) == BigDecimal(1.45))
   }
 
+  test("The price of two apples and one orange is 0.85 pence since one apple is free") {
+    val apple = new Food(FoodNames.Apple, BigDecimal(0.60))
+    val orange = new Food(FoodNames.Apple, BigDecimal(0.25))
 
+    // An Apple And An Orange cost 85 pence
+    assert((storeCheckout scan List(apple, apple, orange)) == BigDecimal(0.85))
+  }
+
+  test("The price of two apples should be 0.60 pence since the second apple should be free of charge") {
+
+    val apple = new Food(FoodNames.Apple, BigDecimal(0.60))
+
+    assert((storeCheckout scan List(apple, apple)) == BigDecimal("0.60"))
+  }
+
+  test("You Should get one free if you buy three oranges") {
+
+    val orange = new Food(FoodNames.Orange, BigDecimal(0.25))
+
+    assert((storeCheckout scan List(orange, orange, orange)) == BigDecimal(0.50))
+  }
+
+  test("You should get one apple and one orange free") {
+    val apple = new Food(FoodNames.Apple, BigDecimal(0.60))
+    val orange = new Food(FoodNames.Orange, BigDecimal(0.25))
+
+    assert((storeCheckout scan List(apple, orange, orange, apple, orange, apple, orange)) == BigDecimal(1.95))
+  }
 
 }
